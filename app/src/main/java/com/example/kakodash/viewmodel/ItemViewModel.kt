@@ -49,6 +49,16 @@ class ItemViewModel : ViewModel() {
             }
         }
     }
+    fun deleteItem(id: Int) {
+        viewModelScope.launch {
+            try {
+                repo.delete(id)
+                loadItems()
+            } catch (e: Exception) {
+                _error.value = e.message
+            }
+        }
+    }
 
 
     fun loadItems() {
