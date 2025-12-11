@@ -1,4 +1,10 @@
 package com.example.kakodash.repository
+import com.example.kakodash.model.Item
+import com.example.kakodash.network.ApiService
+import retrofit2.Response
 
-class ItemRepository {
+class ItemRepository (private val api: ApiService) {
+    suspend fun getAll(): Response<List<Item>> = api.getItems()
+
+    suspend fun get(id: Int): Response<Item> = api.getItem(id)
 }
