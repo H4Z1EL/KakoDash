@@ -21,6 +21,12 @@ class ItemViewModel : ViewModel() {
 
     private val _error = MutableStateFlow<String?>(null)
     val error = _error.asStateFlow()
+    private val _editingItem = MutableStateFlow<Item?>(null)
+    val editingItem = _editingItem.asStateFlow()
+
+    fun startEdit(item: Item?) {
+        _editingItem.value = item
+    }
 
     fun loadItems() {
         viewModelScope.launch {
