@@ -27,6 +27,29 @@ class ItemViewModel : ViewModel() {
     fun startEdit(item: Item?) {
         _editingItem.value = item
     }
+    fun saveItem(title: String, body: String) {
+        val editing = editingItem.value
+
+        viewModelScope.launch {
+            _loading.value = true
+            try {
+                if (editing == null) {
+                    repo.create(Item(title = title, body = body))
+                } else {
+                    repo.update(editing.id, editing.copy(title = title, body = body))
+                }
+
+                loadItems()
+                _editingItem.value = null
+
+            } catch (e: Exception) {
+                _error.value = e.message
+            } finally {
+                _loading.value = false
+            }
+        }
+    }
+
 
     fun loadItems() {
         viewModelScope.launch {
