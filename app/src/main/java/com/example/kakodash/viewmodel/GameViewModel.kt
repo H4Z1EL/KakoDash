@@ -15,6 +15,11 @@ class GameViewModel : ViewModel() {
     private val _obstacleX = MutableStateFlow(1f)
     val obstacleX = _obstacleX.asStateFlow()
 
+    // Variables de física (Commit 21)
+    private var velocityY = 0f
+    private val gravity = -0.003f
+    private var obstacleSpeed = 0.01f
+
     fun jump() {
         // Implementación vendrá en próximos commits
     }
