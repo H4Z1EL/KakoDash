@@ -16,6 +16,8 @@ fun ItemsScreen(vm: ItemViewModel = viewModel()) {
     val items by vm.items.collectAsState()
     val loading by vm.loading.collectAsState()
     val editingItem by vm.editingItem.collectAsState()
+    // Implementación del error
+    val error by vm.error.collectAsState()
 
     var showDialog by remember { mutableStateOf(false) }
     var title by remember { mutableStateOf("") }
@@ -38,6 +40,15 @@ fun ItemsScreen(vm: ItemViewModel = viewModel()) {
         Text("Items", style = MaterialTheme.typography.titleLarge)
 
         Spacer(Modifier.height(16.dp))
+
+        // Implementación del Text para mostrar el error
+        if (error != null) {
+            Text(
+                text = "Error: $error",
+                color = MaterialTheme.colorScheme.error,
+                modifier = Modifier.padding(8.dp)
+            )
+        }
 
         // COMMIT 17: botón para crear nuevo item
         Button(
