@@ -42,11 +42,33 @@ fun ItemsScreen(vm: ItemViewModel = viewModel()) {
         LazyColumn {
             items(items) { item ->
                 Card(
-                    modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp)
                 ) {
                     Column(Modifier.padding(16.dp)) {
                         Text(item.title, style = MaterialTheme.typography.titleMedium)
                         Text(item.body, style = MaterialTheme.typography.bodyMedium)
+
+                        // COMMIT 16: botones Editar / Eliminar
+                        Row(
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(top = 8.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            TextButton(onClick = {
+                                vm.startEdit(item)   // ← llenará el diálogo
+                            }) {
+                                Text("Editar")
+                            }
+
+                            TextButton(onClick = {
+                                vm.deleteItem(item.id)
+                            }) {
+                                Text("Eliminar")
+                            }
+                        }
                     }
                 }
             }
