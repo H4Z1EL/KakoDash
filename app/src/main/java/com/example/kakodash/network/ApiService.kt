@@ -1,5 +1,5 @@
 package com.example.kakodash.network
-
+//revision completa de api service
 import com.example.kakodash.model.Item
 import retrofit2.Response
 import retrofit2.http.*
