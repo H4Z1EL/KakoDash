@@ -1,4 +1,4 @@
-package com.example.kakodash.repository;
+package com.example.kakodash.repository
 
-public class ItemRepository {
+class ItemRepository {
 }

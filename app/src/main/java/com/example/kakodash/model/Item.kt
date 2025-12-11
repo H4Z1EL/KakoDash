@@ -1,4 +1,7 @@
-package com.example.kakodash.model;
+package com.example.kakodash.model
 
-public class Item {
-}
+data class Item (
+    val id: Int = 0,
+    val title: String = "",
+    val body: String = ""
+)

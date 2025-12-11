@@ -1,4 +1,4 @@
-package com.example.kakodash.sensor;
+package com.example.kakodash.sensor
 
-public class ProximitySensor {
+class ProximitySensor {
 }

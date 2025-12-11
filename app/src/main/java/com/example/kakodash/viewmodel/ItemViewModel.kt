@@ -1,4 +1,4 @@
-package com.example.kakodash.viewmodel;
+package com.example.kakodash.viewmodel
 
-public class ItemViewModel {
+class ItemViewModel {
 }
