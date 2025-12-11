@@ -41,4 +41,12 @@ class GameViewModel : ViewModel() {
             velocityY = 0f
         }
     }
+
+    // Commit 23: movimiento del obstáculo
+    private fun updateObstacle() {
+        _obstacleX.value -= obstacleSpeed
+        if (_obstacleX.value < -1f) {
+            _obstacleX.value = 1f
+        }
+    }
 }
