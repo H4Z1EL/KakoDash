@@ -49,4 +49,14 @@ class GameViewModel : ViewModel() {
             _obstacleX.value = 1f
         }
     }
+
+    // Commit 24: detección de colisión entre jugador y obstáculo
+    private fun checkCollision() {
+        val touchingX = _obstacleX.value in -0.1f..0.1f
+        val touchingY = _playerY.value < 0.15f
+
+        if (touchingX && touchingY) {
+            _isGameOver.value = true
+        }
+    }
 }
