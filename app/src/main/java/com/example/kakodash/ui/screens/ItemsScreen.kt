@@ -15,6 +15,19 @@ fun ItemsScreen(vm: ItemViewModel = viewModel()) {
 
     val items by vm.items.collectAsState()
     val loading by vm.loading.collectAsState()
+    val editingItem by vm.editingItem.collectAsState()
+
+    var showDialog by remember { mutableStateOf(false) }
+    var title by remember { mutableStateOf("") }
+    var body by remember { mutableStateOf("") }
+
+    LaunchedEffect(editingItem) {
+        editingItem?.let {
+            title = it.title
+            body = it.body
+            showDialog = true
+        }
+    }
 
     LaunchedEffect(Unit) {
         vm.loadItems()
@@ -42,5 +55,42 @@ fun ItemsScreen(vm: ItemViewModel = viewModel()) {
 
     if (loading) {
         LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+    }
+
+    if (showDialog) {
+        AlertDialog(
+            onDismissRequest = { showDialog = false },
+            confirmButton = {
+                Button(onClick = {
+                    vm.saveItem(title, body)
+                    showDialog = false
+                }) {
+                    Text("Guardar")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDialog = false }) {
+                    Text("Cancelar")
+                }
+            },
+            title = {
+                Text(if (editingItem == null) "Nuevo Item" else "Editar Item")
+            },
+            text = {
+                Column {
+                    OutlinedTextField(
+                        value = title,
+                        onValueChange = { title = it },
+                        label = { Text("Título") }
+                    )
+                    Spacer(Modifier.height(8.dp))
+                    OutlinedTextField(
+                        value = body,
+                        onValueChange = { body = it },
+                        label = { Text("Contenido") }
+                    )
+                }
+            }
+        )
     }
 }
