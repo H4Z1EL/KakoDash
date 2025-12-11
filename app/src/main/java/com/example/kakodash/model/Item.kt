@@ -1,5 +1,5 @@
 package com.example.kakodash.model
-//hola, prueba de git
+//hola, prueba de git a ver si ahora si
 
 data class Item (
     val id: Int = 0,
