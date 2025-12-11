@@ -20,8 +20,13 @@ class GameViewModel : ViewModel() {
     private val gravity = -0.003f
     private var obstacleSpeed = 0.01f
 
+    init {
+        startGameLoop()
+    }
+
     fun jump() {
-        // Implementación vendrá en próximos commits
+        // Luego se puede ajustar el valor del salto
+        velocityY = 0.3f
     }
 
     fun resetGame() {
@@ -58,5 +63,19 @@ class GameViewModel : ViewModel() {
         if (touchingX && touchingY) {
             _isGameOver.value = true
         }
+    }
+
+    // Commit 25: game loop básico que actualiza el juego
+    private fun startGameLoop() {
+        Thread {
+            while (true) {
+                if (!_isGameOver.value) {
+                    updatePlayer()
+                    updateObstacle()
+                    checkCollision()
+                }
+                Thread.sleep(16) // ~60 FPS
+            }
+        }.start()
     }
 }
