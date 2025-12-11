@@ -39,6 +39,21 @@ fun ItemsScreen(vm: ItemViewModel = viewModel()) {
 
         Spacer(Modifier.height(16.dp))
 
+        // COMMIT 17: botón para crear nuevo item
+        Button(
+            onClick = {
+                vm.startEdit(null) // null = nuevo item
+                title = ""
+                body = ""
+                showDialog = true
+            },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Crear nuevo item")
+        }
+
+        Spacer(Modifier.height(16.dp))
+
         LazyColumn {
             items(items) { item ->
                 Card(
@@ -50,7 +65,6 @@ fun ItemsScreen(vm: ItemViewModel = viewModel()) {
                         Text(item.title, style = MaterialTheme.typography.titleMedium)
                         Text(item.body, style = MaterialTheme.typography.bodyMedium)
 
-                        // COMMIT 16: botones Editar / Eliminar
                         Row(
                             Modifier
                                 .fillMaxWidth()
@@ -58,7 +72,7 @@ fun ItemsScreen(vm: ItemViewModel = viewModel()) {
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             TextButton(onClick = {
-                                vm.startEdit(item)   // ← llenará el diálogo
+                                vm.startEdit(item)
                             }) {
                                 Text("Editar")
                             }
