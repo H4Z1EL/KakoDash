@@ -28,5 +28,17 @@ class GameViewModel : ViewModel() {
         _playerY.value = 0f
         _obstacleX.value = 1f
         _isGameOver.value = false
+        velocityY = 0f
+    }
+
+    // Commit 22: actualizar jugador con gravedad y límite de piso
+    private fun updatePlayer() {
+        velocityY += gravity
+        _playerY.value += velocityY
+
+        if (_playerY.value < 0f) {
+            _playerY.value = 0f
+            velocityY = 0f
+        }
     }
 }
