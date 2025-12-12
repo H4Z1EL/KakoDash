@@ -16,3 +16,5 @@ Descripción del Proyecto (README.md Draft)
 ​El juego utiliza el sensor de proximidad del dispositivo para la interacción con el usuario.  
 ​Mecanismo de Salto: Cuando la mano del usuario se acerca al sensor (distancia menor a la máxima o cerca de 0), la aplicación detecta este evento y activa la función jump() en el juego.  
 ​Reinicio del Juego: En la pantalla de Game Over, cubrir el sensor (acercar la mano) reinicia el juego.
+![cap1](https://github.com/user-attachments/assets/c4bc7994-dfd4-4b3f-b8cb-a41e12cca0fa)
+![cap2](https://github.com/user-attachments/assets/348a479e-3a03-4df9-b403-ff4e8af2724d)
