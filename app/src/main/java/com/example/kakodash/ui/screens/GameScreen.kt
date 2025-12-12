@@ -21,22 +21,22 @@ fun GameScreen(
     val playerY by gameViewModel.playerY.collectAsState()
     val obstacleX by gameViewModel.obstacleX.collectAsState()
     val isGameOver by gameViewModel.isGameOver.collectAsState()
+    val playerColor by gameViewModel.playerColor.collectAsState()
+    val playerName by gameViewModel.playerName.collectAsState()
 
     val context = LocalContext.current
     var isNear by remember { mutableStateOf(false) }
 
+    // SENSOR
     DisposableEffect(Unit) {
         val sensor = ProximitySensor(
             context,
             onNear = {
                 isNear = true
-                gameViewModel.jump()     // SALTO
+                gameViewModel.jump()
             },
-            onFar = {
-                isNear = false
-            }
+            onFar = { isNear = false }
         )
-
         sensor.start()
         onDispose { sensor.stop() }
     }
@@ -47,12 +47,21 @@ fun GameScreen(
             .background(Color.Black)
     ) {
 
+        // Nombre
+        Text(
+            text = playerName,
+            color = Color.White,
+            modifier = Modifier
+                .align(Alignment.TopStart)
+                .padding(16.dp)
+        )
+
         // Jugador
         Box(
             modifier = Modifier
                 .offset(y = (-playerY * 300).dp)
                 .size(50.dp)
-                .background(Color.Cyan)
+                .background(playerColor)
                 .align(Alignment.BottomCenter)
         )
 
@@ -65,7 +74,6 @@ fun GameScreen(
                 .align(Alignment.BottomCenter)
         )
 
-        // GAME OVER
         if (isGameOver) {
             Column(
                 Modifier.align(Alignment.Center),
@@ -74,12 +82,11 @@ fun GameScreen(
                 Text("GAME OVER", color = Color.White)
                 Spacer(Modifier.height(10.dp))
                 Text("Cubre el sensor para reiniciar", color = Color.LightGray)
-                if (isNear) gameViewModel.resetGame()
             }
+
+            if (isNear) gameViewModel.resetGame()
         }
 
-
-        // Botón perfil (temporal)
         Button(
             onClick = { navController.navigate("edit_profile") },
             modifier = Modifier
@@ -90,3 +97,4 @@ fun GameScreen(
         }
     }
 }
+
