@@ -44,6 +44,19 @@ fun GameScreen(
                 .align(Alignment.BottomCenter)
         )
 
+        // GAME OVER
+        if (isGameOver) {
+            Column(
+                Modifier.align(Alignment.Center),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text("GAME OVER", color = Color.White)
+                Spacer(Modifier.height(10.dp))
+                Text("Cubre el sensor para reiniciar", color = Color.LightGray)
+            }
+        }
+
+
         // Botón perfil (temporal)
         Button(
             onClick = { navController.navigate("edit_profile") },
