@@ -1,26 +1,57 @@
 package com.example.kakodash.ui.screens
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavHostController
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import com.example.kakodash.viewmodel.GameViewModel
 
 @Composable
-fun GameScreen(navController: NavHostController) {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(text = "Game Screen (temporal)")
+fun GameScreen(
+    navController: NavController,
+    gameViewModel: GameViewModel
+) {
+    val playerY by gameViewModel.playerY.collectAsState()
+    val obstacleX by gameViewModel.obstacleX.collectAsState()
+    val isGameOver by gameViewModel.isGameOver.collectAsState()
 
-        Button(onClick = { navController.navigate("items") }) {
-            Text("Items")
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Black)
+    ) {
+
+        // Jugador
+        Box(
+            modifier = Modifier
+                .offset(y = (-playerY * 300).dp)
+                .size(50.dp)
+                .background(Color.Cyan)
+                .align(Alignment.BottomCenter)
+        )
+
+        // Obstáculo
+        Box(
+            modifier = Modifier
+                .offset(x = (obstacleX * 300).dp)
+                .size(40.dp)
+                .background(Color.Red)
+                .align(Alignment.BottomCenter)
+        )
+
+        // Botón perfil (temporal)
+        Button(
+            onClick = { navController.navigate("edit_profile") },
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .padding(16.dp)
+        ) {
+            Text("Perfil")
         }
     }
 }

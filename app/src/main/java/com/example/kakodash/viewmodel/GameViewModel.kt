@@ -25,8 +25,9 @@ class GameViewModel : ViewModel() {
     }
 
     fun jump() {
-        // Luego se puede ajustar el valor del salto
-        velocityY = 0.3f
+        if (_playerY.value == 0f) {    // Solo puede saltar en el piso
+            velocityY = 0.05f
+        }
     }
 
     fun resetGame() {
