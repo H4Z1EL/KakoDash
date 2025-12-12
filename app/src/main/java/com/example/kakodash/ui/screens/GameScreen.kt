@@ -7,8 +7,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.kakodash.sensor.ProximitySensor
 import com.example.kakodash.viewmodel.GameViewModel
 
 @Composable
@@ -19,6 +21,25 @@ fun GameScreen(
     val playerY by gameViewModel.playerY.collectAsState()
     val obstacleX by gameViewModel.obstacleX.collectAsState()
     val isGameOver by gameViewModel.isGameOver.collectAsState()
+
+    val context = LocalContext.current
+    var isNear by remember { mutableStateOf(false) }
+
+    DisposableEffect(Unit) {
+        val sensor = ProximitySensor(
+            context,
+            onNear = {
+                isNear = true
+                gameViewModel.jump()     // SALTO
+            },
+            onFar = {
+                isNear = false
+            }
+        )
+
+        sensor.start()
+        onDispose { sensor.stop() }
+    }
 
     Box(
         modifier = Modifier
@@ -53,6 +74,7 @@ fun GameScreen(
                 Text("GAME OVER", color = Color.White)
                 Spacer(Modifier.height(10.dp))
                 Text("Cubre el sensor para reiniciar", color = Color.LightGray)
+                if (isNear) gameViewModel.resetGame()
             }
         }
 
