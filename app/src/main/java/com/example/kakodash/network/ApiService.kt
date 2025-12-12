@@ -1,16 +1,19 @@
 package com.example.kakodash.network
-import com.example.kakodash.model.Item
-import retrofit2.Response
-import retrofit2.http.*
+
+import com.example.kakodash.model.Profile
+import retrofit2.http.Body
+import retrofit2.http.DELETE
+import retrofit2.http.GET
+import retrofit2.http.PUT
+
 interface ApiService {
-    @GET("items")
-    suspend fun getItems(): Response<List<Item>>
-    @GET("items/{id}")
-    suspend fun getItem(@Path("id") id: Int): Response<Item>
-    @POST("items")
-    suspend fun createItem(@Body item: Item): Response<Item>
-    @PUT("items/{id}")
-    suspend fun updateItem(@Path("id") id: Int, @Body item: Item): Response<Item>
-    @DELETE("items/{id}")
-    suspend fun deleteItem(@Path("id") id: Int): Response<Unit>
+
+    @GET("profile")
+    suspend fun getProfile(): Profile
+
+    @PUT("profile")
+    suspend fun updateProfile(@Body profile: Profile): Profile
+
+    @DELETE("profile")
+    suspend fun deleteProfile()
 }

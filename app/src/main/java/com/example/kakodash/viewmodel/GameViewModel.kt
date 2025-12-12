@@ -1,43 +1,28 @@
 package com.example.kakodash.viewmodel
 
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.kakodash.model.Profile
+import com.example.kakodash.network.NetworkModule
+import com.example.kakodash.repository.ProfileRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 
 class GameViewModel : ViewModel() {
 
+    private val repo = ProfileRepository(NetworkModule.provideApiService())
+
+    // ---- PROFILE ----
     private val _playerName = MutableStateFlow("Jugador")
     val playerName = _playerName.asStateFlow()
 
     private val _playerColor = MutableStateFlow(Color.Cyan)
     val playerColor = _playerColor.asStateFlow()
 
-    fun getProfile(): Pair<String, Color> = Pair(_playerName.value, _playerColor.value)
-
-    fun createProfile(name: String, color: Color) {
-        _playerName.value = name
-        _playerColor.value = color
-    }
-
-    fun updateProfile(name: String, color: Color) {
-        _playerName.value = name
-        _playerColor.value = color
-    }
-
-    fun deleteProfile() {
-        _playerName.value = "Jugador"
-        _playerColor.value = Color.Cyan
-    }
-
-    fun setPlayerName(name: String) {
-        _playerName.value = name
-    }
-
-    fun setPlayerColor(color: Color) {
-        _playerColor.value = color
-    }
-
+    // ---- GAME STATE ----
     private val _isGameOver = MutableStateFlow(false)
     val isGameOver = _isGameOver.asStateFlow()
 
@@ -52,8 +37,75 @@ class GameViewModel : ViewModel() {
     private var obstacleSpeed = 0.01f
 
     init {
+        loadProfile()
         startGameLoop()
     }
+
+    // ---- COLOR HELPERS ----
+
+    private fun colorFromString(s: String): Color {
+        return when (s.lowercase()) {
+            "green" -> Color.Green
+            "magenta" -> Color.Magenta
+            "yellow" -> Color.Yellow
+            else -> Color.Cyan
+        }
+    }
+
+    private fun colorToString(c: Color): String {
+        return when (c.toArgb()) {
+            Color.Green.toArgb() -> "green"
+            Color.Magenta.toArgb() -> "magenta"
+            Color.Yellow.toArgb() -> "yellow"
+            Color.Cyan.toArgb() -> "cyan"
+            else -> "cyan"
+        }
+    }
+
+    // ---- SERVER ACTIONS ----
+
+    fun loadProfile() {
+        viewModelScope.launch {
+            try {
+                val p = repo.getProfile()
+                _playerName.value = p.name
+                _playerColor.value = colorFromString(p.color)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    fun updateProfile(name: String, color: Color) {
+        viewModelScope.launch {
+            try {
+                val profile = Profile(
+                    name = name,
+                    color = colorToString(color)
+                )
+
+                repo.updateProfile(profile)
+                loadProfile()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    fun deleteProfile() {
+        viewModelScope.launch {
+            try {
+                repo.deleteProfile()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+
+            _playerName.value = "Jugador"
+            _playerColor.value = Color.Cyan
+        }
+    }
+
+    // ---- GAME LOOP ----
 
     private fun startGameLoop() {
         Thread {

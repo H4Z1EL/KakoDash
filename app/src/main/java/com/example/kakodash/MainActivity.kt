@@ -3,9 +3,10 @@ package com.example.kakodash
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.navigation.compose.*
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.kakodash.ui.screens.GameScreen
-import com.example.kakodash.ui.screens.ItemsScreen
 import com.example.kakodash.ui.screens.EditProfileScreen
 import com.example.kakodash.ui.theme.KakoDashTheme
 import com.example.kakodash.viewmodel.GameViewModel
@@ -22,21 +23,11 @@ class MainActivity : ComponentActivity() {
                 NavHost(navController = navController, startDestination = "game") {
 
                     composable("game") {
-                        GameScreen(
-                            navController = navController,
-                            gameViewModel = gameViewModel
-                        )
-                    }
-
-                    composable("items") {
-                        ItemsScreen()
+                        GameScreen(navController, gameViewModel)
                     }
 
                     composable("edit_profile") {
-                        EditProfileScreen(
-                            navController = navController,
-                            gameViewModel = gameViewModel
-                        )
+                        EditProfileScreen(navController, gameViewModel)
                     }
                 }
             }
