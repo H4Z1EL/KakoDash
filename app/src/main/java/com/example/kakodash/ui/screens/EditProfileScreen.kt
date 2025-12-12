@@ -22,13 +22,17 @@ fun EditProfileScreen(
     var selectedColor by remember { mutableStateOf(gameViewModel.playerColor.value) }
 
     Column(
-        Modifier.fillMaxSize().padding(20.dp),
+        Modifier
+            .fillMaxSize()
+            .padding(20.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        Text("Editar Perfil", style = MaterialTheme.typography.headlineMedium)
+        Text(text = "Editar Perfil", style = MaterialTheme.typography.headlineMedium)
+
         Spacer(Modifier.height(20.dp))
 
+        // Nombre
         OutlinedTextField(
             value = name,
             onValueChange = { name = it },
@@ -40,15 +44,16 @@ fun EditProfileScreen(
         Text("Color del personaje:")
 
         Row(Modifier.padding(10.dp)) {
+
             listOf(Color.Cyan, Color.Green, Color.Magenta, Color.Yellow).forEach { c ->
                 Box(
                     modifier = Modifier
                         .size(50.dp)
                         .padding(5.dp)
                         .background(c)
-                        .border(
-                            width = if (selectedColor == c) 3.dp else 0.dp,
-                            color = Color.White
+                        .then(
+                            if (selectedColor == c) Modifier.border(3.dp, Color.White)
+                            else Modifier
                         )
                         .clickable { selectedColor = c }
                 )
@@ -66,7 +71,7 @@ fun EditProfileScreen(
             Text("Guardar")
         }
 
-        Spacer(Modifier.height(10.dp))
+        Spacer(Modifier.height(20.dp))
 
         Button(
             onClick = {

@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
+import androidx.compose.material3.AlertDialog
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -14,14 +15,17 @@ import com.example.kakodash.viewmodel.ItemViewModel
 fun ItemsScreen(vm: ItemViewModel = viewModel()) {
 
     val items by vm.items.collectAsState()
-    val loading by vm.loading.collectAsState()
     val editingItem by vm.editingItem.collectAsState()
-    // Implementación del error
-    val error by vm.error.collectAsState()
+    val loading by vm.loading.collectAsState()
 
     var showDialog by remember { mutableStateOf(false) }
     var title by remember { mutableStateOf("") }
     var body by remember { mutableStateOf("") }
+
+
+    LaunchedEffect(Unit) {
+        vm.loadItems()
+    }
 
     LaunchedEffect(editingItem) {
         editingItem?.let {
@@ -31,29 +35,11 @@ fun ItemsScreen(vm: ItemViewModel = viewModel()) {
         }
     }
 
-    LaunchedEffect(Unit) {
-        vm.loadItems()
-    }
-
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
 
-        Text("Items", style = MaterialTheme.typography.titleLarge)
-
-        Spacer(Modifier.height(16.dp))
-
-        // Implementación del Text para mostrar el error
-        if (error != null) {
-            Text(
-                text = "Error: $error",
-                color = MaterialTheme.colorScheme.error,
-                modifier = Modifier.padding(8.dp)
-            )
-        }
-
-        // COMMIT 17: botón para crear nuevo item
         Button(
             onClick = {
-                vm.startEdit(null) // null = nuevo item
+                vm.startEdit(null)
                 title = ""
                 body = ""
                 showDialog = true
@@ -68,26 +54,19 @@ fun ItemsScreen(vm: ItemViewModel = viewModel()) {
         LazyColumn {
             items(items) { item ->
                 Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp)
+                    modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
                 ) {
                     Column(Modifier.padding(16.dp)) {
-                        Text(item.title, style = MaterialTheme.typography.titleMedium)
+                        Text(item.title, style = MaterialTheme.typography.titleLarge)
                         Text(item.body, style = MaterialTheme.typography.bodyMedium)
 
-                        Row(
-                            Modifier
-                                .fillMaxWidth()
-                                .padding(top = 8.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
+                        Row(Modifier.fillMaxWidth(), horizontalArrangement =
+                            Arrangement.SpaceBetween) {
                             TextButton(onClick = {
                                 vm.startEdit(item)
                             }) {
                                 Text("Editar")
                             }
-
                             TextButton(onClick = {
                                 vm.deleteItem(item.id)
                             }) {
@@ -99,11 +78,6 @@ fun ItemsScreen(vm: ItemViewModel = viewModel()) {
             }
         }
     }
-
-    if (loading) {
-        LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
-    }
-
     if (showDialog) {
         AlertDialog(
             onDismissRequest = { showDialog = false },
@@ -120,24 +94,19 @@ fun ItemsScreen(vm: ItemViewModel = viewModel()) {
                     Text("Cancelar")
                 }
             },
-            title = {
-                Text(if (editingItem == null) "Nuevo Item" else "Editar Item")
-            },
+            title = { Text(if (editingItem == null) "Nuevo Item" else "Editar Item") },
             text = {
                 Column {
-                    OutlinedTextField(
-                        value = title,
-                        onValueChange = { title = it },
-                        label = { Text("Título") }
-                    )
+                    OutlinedTextField(value = title, onValueChange = { title = it }, label = { Text("Título")
+                    })
                     Spacer(Modifier.height(8.dp))
-                    OutlinedTextField(
-                        value = body,
-                        onValueChange = { body = it },
-                        label = { Text("Contenido") }
-                    )
+                    OutlinedTextField(value = body, onValueChange = { body = it }, label = {
+                        Text("Contenido") })
                 }
             }
         )
+    }
+    if (loading) {
+        LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
     }
 }

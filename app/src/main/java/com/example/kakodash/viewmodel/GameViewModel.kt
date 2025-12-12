@@ -7,12 +7,18 @@ import kotlinx.coroutines.flow.asStateFlow
 
 class GameViewModel : ViewModel() {
 
-    // PERFIL
     private val _playerName = MutableStateFlow("Jugador")
     val playerName = _playerName.asStateFlow()
 
     private val _playerColor = MutableStateFlow(Color.Cyan)
     val playerColor = _playerColor.asStateFlow()
+
+    fun getProfile(): Pair<String, Color> = Pair(_playerName.value, _playerColor.value)
+
+    fun createProfile(name: String, color: Color) {
+        _playerName.value = name
+        _playerColor.value = color
+    }
 
     fun updateProfile(name: String, color: Color) {
         _playerName.value = name
@@ -24,7 +30,14 @@ class GameViewModel : ViewModel() {
         _playerColor.value = Color.Cyan
     }
 
-    // GAME STATE
+    fun setPlayerName(name: String) {
+        _playerName.value = name
+    }
+
+    fun setPlayerColor(color: Color) {
+        _playerColor.value = color
+    }
+
     private val _isGameOver = MutableStateFlow(false)
     val isGameOver = _isGameOver.asStateFlow()
 
@@ -81,9 +94,7 @@ class GameViewModel : ViewModel() {
     private fun checkCollision() {
         val touchingX = _obstacleX.value in -0.1f..0.1f
         val touchingY = _playerY.value < 0.15f
-
-        if (touchingX && touchingY)
-            _isGameOver.value = true
+        if (touchingX && touchingY) _isGameOver.value = true
     }
 
     fun resetGame() {

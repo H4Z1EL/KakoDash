@@ -19,47 +19,11 @@ class ItemViewModel : ViewModel() {
     private val _loading = MutableStateFlow(false)
     val loading = _loading.asStateFlow()
 
-    private val _error = MutableStateFlow<String?>(null)
-    val error = _error.asStateFlow()
     private val _editingItem = MutableStateFlow<Item?>(null)
     val editingItem = _editingItem.asStateFlow()
 
-    fun startEdit(item: Item?) {
-        _editingItem.value = item
-    }
-    fun saveItem(title: String, body: String) {
-        val editing = editingItem.value
-
-        viewModelScope.launch {
-            _loading.value = true
-            try {
-                if (editing == null) {
-                    repo.create(Item(title = title, body = body))
-                } else {
-                    repo.update(editing.id, editing.copy(title = title, body = body))
-                }
-
-                loadItems()
-                _editingItem.value = null
-
-            } catch (e: Exception) {
-                _error.value = e.message
-            } finally {
-                _loading.value = false
-            }
-        }
-    }
-    fun deleteItem(id: Int) {
-        viewModelScope.launch {
-            try {
-                repo.delete(id)
-                loadItems()
-            } catch (e: Exception) {
-                _error.value = e.message
-            }
-        }
-    }
-
+    private val _error = MutableStateFlow<String?>(null)
+    val error = _error.asStateFlow()
 
     fun loadItems() {
         viewModelScope.launch {
@@ -75,6 +39,43 @@ class ItemViewModel : ViewModel() {
                 _error.value = e.message
             } finally {
                 _loading.value = false
+            }
+        }
+    }
+
+    fun startEdit(item: Item?) {
+        _editingItem.value = item
+    }
+
+    fun saveItem(title: String, body: String) {
+        val editing = editingItem.value
+
+        viewModelScope.launch {
+            _loading.value = true
+            try {
+                if (editing == null) {
+                    repo.create(Item(title = title, body = body))
+                } else {
+                    repo.update(editing.id, editing.copy(title = title, body = body))
+                }
+                loadItems()
+                _editingItem.value = null
+
+            } catch (e: Exception) {
+                _error.value = e.message
+            } finally {
+                _loading.value = false
+            }
+        }
+    }
+
+    fun deleteItem(id: Int) {
+        viewModelScope.launch {
+            try {
+                repo.delete(id)
+                loadItems()
+            } catch (e: Exception) {
+                _error.value = e.message
             }
         }
     }
